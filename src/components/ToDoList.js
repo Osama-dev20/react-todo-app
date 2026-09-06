@@ -7,6 +7,8 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from '@mui/material';
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
 
 // Components
 import ToDo from "./ToDo";
@@ -53,6 +55,36 @@ export default function ToDoList() {
 
           {/* ===== ALL TODOS ===== */}
           <ToDo />
+         
+         
+          {/* ===== Input + ADD Button ===== */}
+            <Box
+              sx={{
+                display: "flex",
+                gap: 1,
+                padding: "0 20px 20px",
+                direction:"rtl",
+                
+              }}
+            >
+
+              <TextField
+                fullWidth
+                size="small"
+                placeholder="أضف مهمة جديدة..."
+              />
+            
+              <Button
+                variant="contained"
+                sx={{
+                  fontFamily: "Alexandria",
+                  fontWeight: "bold",
+                  padding: "0 20px",
+                }}
+              >
+                إضافة
+              </Button>
+            </Box>
 
         </Card>
       </Box>
