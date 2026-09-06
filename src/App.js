@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import ToDoList from "./components/ToDoList"
 
@@ -11,7 +10,7 @@ function App() {
           justifyContent:"center",
           alignItems:"center",
           height:"100vh",
-          direction:"rtl"
+          
         }}
           >
 
