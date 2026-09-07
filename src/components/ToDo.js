@@ -12,7 +12,7 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import "./ToDo.css";
 
 
-export default function ToDo(){
+export default function ToDo({title, details}){
     return(
       <div>  
        <Card 
@@ -33,11 +33,11 @@ export default function ToDo(){
 
          <div className='Title'> 
            <Typography variant='h5' gutterBottom>
-             قرائة 3 كتب
+             {title}
            </Typography>
            
            <Typography  component="div" sx={{ fontSize: 17 }}>
-             الانجاز قبل نهاية الشهر
+             {details}
            </Typography>
          </div>
 

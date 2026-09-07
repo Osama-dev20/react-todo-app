@@ -16,14 +16,25 @@ import ToDo from "./ToDo";
 // Styles
 import "../App.css";
 
+// Create a UUID
+import { v4 as uuidv4 } from 'uuid';
+
 const theme = createTheme({
   typography: {
     fontFamily: "Alexandria"
   },
 });
 
+const todos = [
+  {id:uuidv4(), title:"قراءة كتاب", details:"يجب ان انجزه", isCompleted:false},
+  {id:uuidv4(), title:"قراءة كتاب", details:"يجب ان انجزه", isCompleted:false},
+  {id:uuidv4(), title:"قراءة كتاب", details:"يجب ان انجزه", isCompleted:false}
+]
+
 export default function ToDoList() {
-  
+   const todosjsx = todos.map((t) => {
+     return <ToDo key={t.id} title={t.title} details={t.details}/>
+   });
   return (
   <ThemeProvider theme={theme}>
     <Container maxWidth="sm">
@@ -54,7 +65,7 @@ export default function ToDoList() {
           </Box>
 
           {/* ===== ALL TODOS ===== */}
-          <ToDo />
+           {todosjsx}
          
          
           {/* ===== Input + ADD Button ===== */}
