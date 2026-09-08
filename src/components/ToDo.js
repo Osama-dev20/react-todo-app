@@ -8,14 +8,33 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 
+// Hooks
+import { useContext } from 'react';
+
+// Components
+import TodosContext from "../Context/todosContext"
+
 // CSS
 import "./ToDo.css";
 
 
 export default function ToDo({todo, handCheck}){
+  const {todos, setTodos} = useContext(TodosContext)
+
   function handCheckClick(){
-    handCheck(todo.id) 
+    const updateTodos = todos.map( (t) => {
+         if(t.id == todo.id){
+            if(t.isCompleted == true){
+                t.isCompleted = false
+            }else{
+              t.isCompleted = true
+            }
+         }
+         return t;
+      })
+      setTodos(updateTodos)
   }
+
     return(
       <div>  
        <Card 

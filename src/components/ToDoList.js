@@ -10,17 +10,19 @@ import { createTheme, ThemeProvider } from '@mui/material';
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
-// Components
-import ToDo from "./ToDo";
-
-// Styles
-import "../App.css";
+// Hooks
+import { useState } from "react";
+import { useContext } from "react";
 
 // Create a UUID
 import { v4 as uuidv4 } from 'uuid';
 
-// Hooks
-import { useState } from "react";
+// Components
+import ToDo from "./ToDo";
+import TodosContext from "../Context/todosContext"
+
+// Styles
+import "../App.css";
 
 
 const theme = createTheme({
@@ -29,34 +31,16 @@ const theme = createTheme({
   },
 });
 
-
-const initialToDos = [
-  {id:uuidv4(), title:"قراءة كتاب", details:"يجب ان انجزه", isCompleted:false},
-  {id:uuidv4(), title:"قراءة كتاب", details:"يجب ان انجزه", isCompleted:false},
-  {id:uuidv4(), title:"قراءة كتاب", details:"يجب ان انجزه", isCompleted:false}
-]
-
 export default function ToDoList() {
-   
-   const [todos, setTodos] = useState(initialToDos)
+   const {todos, setTodos} = useContext(TodosContext)
    const [titleInput, setTitleInput] = useState("")
    
     function handCheckClick(todoid){
-      const updateTodos = todos.map( (t) => {
-         if(t.id == todoid){
-            if(t.isCompleted == true){
-                t.isCompleted = false
-            }else{
-              t.isCompleted = true
-            }
-         }
-         return t;
-      })
-      setTodos(updateTodos)
+
     }
 
    const todosjsx = todos.map((t) => {
-     return <ToDo key={t.id} todo={t} handCheck = {handCheckClick}/>
+     return <ToDo key={t.id} todo={t} />
    });
 
    function handleAddClick(){
