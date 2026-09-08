@@ -12,7 +12,10 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import "./ToDo.css";
 
 
-export default function ToDo({title, details}){
+export default function ToDo({todo, handCheck}){
+  function handCheckClick(){
+    handCheck(todo.id) 
+  }
     return(
       <div>  
        <Card 
@@ -33,24 +36,41 @@ export default function ToDo({title, details}){
 
          <div className='Title'> 
            <Typography variant='h5' gutterBottom>
-             {title}
+             {todo.title}
            </Typography>
            
            <Typography  component="div" sx={{ fontSize: 17 }}>
-             {details}
+             {todo.details}
            </Typography>
          </div>
 
          <div className='ButtonsControl' style={{display:"flex", gap:"6px", alignItems: "center"}}>
-          <IconButton aria-label="delete" size="large" sx={{color:"#fff", background:"#4CAF50", border: "1px solid #4CAF50" ,"&:hover": {background: "#C8E6C9",} }}>
+           
+           {/* CHECK ICON BUTTON */}
+          <IconButton 
+           aria-label="delete"
+           size="large" 
+           sx={{color: todo.isCompleted?"#fff":"#4CAF50",
+                background: todo.isCompleted?"#4CAF50":"#fff",
+                border: "1px solid #4CAF50",
+                "&:hover": {background: "#C8E6C9",} }}
+           onClick={ () => {
+               handCheckClick();
+           }}
+          >
             <CheckOutlinedIcon />
           </IconButton>
+          
+           {/* IDET ICON  BUTTON */}
           <IconButton aria-label="delete" size="large" sx={{color:"#42A5F5", background:"#fff", border: "2px solid #42A5F5" ,"&:hover": {background: "#BBDEFB"}}}>
             <EditOutlinedIcon />
           </IconButton>
+          
+           {/* DELETE ICON BUTTON */}
           <IconButton aria-label="delete" size="large" sx={{color:"#EF5350", background:"#fff", border: "2px solid #EF5350", "&:hover": {background: "#FFCDD2"}}}>
             <DeleteOutlineOutlinedIcon />
           </IconButton>
+         
          </div>
 
          </Card>

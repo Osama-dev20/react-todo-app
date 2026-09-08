@@ -19,22 +19,58 @@ import "../App.css";
 // Create a UUID
 import { v4 as uuidv4 } from 'uuid';
 
+// Hooks
+import { useState } from "react";
+
+
 const theme = createTheme({
   typography: {
     fontFamily: "Alexandria"
   },
 });
 
-const todos = [
+
+const initialToDos = [
   {id:uuidv4(), title:"قراءة كتاب", details:"يجب ان انجزه", isCompleted:false},
   {id:uuidv4(), title:"قراءة كتاب", details:"يجب ان انجزه", isCompleted:false},
   {id:uuidv4(), title:"قراءة كتاب", details:"يجب ان انجزه", isCompleted:false}
 ]
 
 export default function ToDoList() {
+   
+   const [todos, setTodos] = useState(initialToDos)
+   const [titleInput, setTitleInput] = useState("")
+   
+    function handCheckClick(todoid){
+      const updateTodos = todos.map( (t) => {
+         if(t.id == todoid){
+            if(t.isCompleted == true){
+                t.isCompleted = false
+            }else{
+              t.isCompleted = true
+            }
+         }
+         return t;
+      })
+      setTodos(updateTodos)
+    }
+
    const todosjsx = todos.map((t) => {
-     return <ToDo key={t.id} title={t.title} details={t.details}/>
+     return <ToDo key={t.id} todo={t} handCheck = {handCheckClick}/>
    });
+
+   function handleAddClick(){
+     const newTodo = {
+       id:uuidv4(),
+       title:titleInput,
+       dedetails:"",
+       isCompleted:false
+     }
+
+     setTodos([...todos, newTodo]);
+     setTitleInput("")
+
+   }
   return (
   <ThemeProvider theme={theme}>
     <Container maxWidth="sm">
@@ -83,7 +119,11 @@ export default function ToDoList() {
                 fullWidth
                 size="small"
                 placeholder="أضف مهمة جديدة..."
-              />
+                value={titleInput}
+                onChange={ (e) => {
+                   setTitleInput(e.target.value) 
+                }}
+              /> 
             
               <Button
                 variant="contained"
@@ -91,6 +131,9 @@ export default function ToDoList() {
                   fontFamily: "Alexandria",
                   fontWeight: "bold",
                   padding: "0 20px",
+                }}
+                onClick={ () => {
+                  handleAddClick()
                 }}
               >
                 إضافة
