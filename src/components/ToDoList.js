@@ -6,24 +6,22 @@ import Divider from "@mui/material/Divider";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Typography from "@mui/material/Typography";
-import { createTheme, ThemeProvider } from '@mui/material';
+import { createTheme, ThemeProvider } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
 // Hooks
-import { useState } from "react";
-import { useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 
 // Create a UUID
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 
 // Components
 import ToDo from "./ToDo";
-import TodosContext from "../Context/todosContext"
+import TodosContext from "../Context/todosContext";
 
 // Styles
 import "../App.css";
-
 
 const theme = createTheme({
   typography: {
@@ -32,83 +30,110 @@ const theme = createTheme({
 });
 
 export default function ToDoList() {
-   const {todos, setTodos} = useContext(TodosContext)
-   const [titleInput, setTitleInput] = useState("")
-   
-    function handCheckClick(todoid){
+  const { todos, setTodos } = useContext(TodosContext);
 
+  const [titleInput, setTitleInput] = useState("");
+
+  // Get todos from localStorage
+  useEffect(() => {
+    const storageTodos = JSON.parse(localStorage.getItem("todos"));
+
+    if (storageTodos) {
+      setTodos(storageTodos);
+    }
+  }, [setTodos]);
+
+  // Create JSX for todos
+  const todosjsx = todos.map((t) => {
+    return <ToDo key={t.id} todo={t} />;
+  });
+
+  // Add Todo
+  function handleAddClick() {
+    if (titleInput.trim() === "") {
+      return;
     }
 
-   const todosjsx = todos.map((t) => {
-     return <ToDo key={t.id} todo={t} />
-   });
+    const newTodo = {
+      id: uuidv4(),
+      title: titleInput,
+      details: "",
+      isCompleted: false
+    };
 
-   function handleAddClick(){
-     const newTodo = {
-       id:uuidv4(),
-       title:titleInput,
-       dedetails:"",
-       isCompleted:false
-     }
+    const updatedTodos = [...todos, newTodo];
 
-     setTodos([...todos, newTodo]);
-     setTitleInput("")
+    setTodos(updatedTodos);
 
-   }
+    localStorage.setItem(
+      "todos",
+      JSON.stringify(updatedTodos)
+    );
+
+    setTitleInput("");
+  }
+
   return (
-  <ThemeProvider theme={theme}>
-    <Container maxWidth="sm">
-      <Box sx={{ minWidth: 275 }}>
-        <Card variant="outlined" sx={{ minHeight: 200 }}>
+    <ThemeProvider theme={theme}>
+      <Container maxWidth="sm">
+        <Box sx={{ minWidth: 275 }}>
+          <Card variant="outlined" sx={{ minHeight: 200 }}>
 
-          {/* ===== Header ===== */}
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              padding: "20px",
-            }}
-          >
-            <Typography variant="h3" style={{fontWeight:"bold",transform:"translateY(10px)"}}>
-              مهامي
-            </Typography>
+            {/* ===== Header ===== */}
 
-            <Divider sx={{ width: "100%", my: 2 }} />
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                padding: "20px",
+              }}
+            >
+              <Typography
+                variant="h3"
+                style={{
+                  fontWeight: "bold",
+                  transform: "translateY(10px)"
+                }}
+              >
+                مهامي
+              </Typography>
 
-            {/* ===== Filters ===== */}
-            <ToggleButtonGroup exclusive>
-              <ToggleButton>غير منجز</ToggleButton>
-              <ToggleButton>منجز</ToggleButton>
-              <ToggleButton>الكل</ToggleButton>
-            </ToggleButtonGroup>
-          </Box>
+              <Divider sx={{ width: "100%", my: 2 }} />
 
-          {/* ===== ALL TODOS ===== */}
-           {todosjsx}
-         
-         
-          {/* ===== Input + ADD Button ===== */}
+              {/* ===== Filters ===== */}
+
+              <ToggleButtonGroup exclusive>
+                <ToggleButton>غير منجز</ToggleButton>
+                <ToggleButton>منجز</ToggleButton>
+                <ToggleButton>الكل</ToggleButton>
+              </ToggleButtonGroup>
+            </Box>
+
+            {/* ===== ALL TODOS ===== */}
+
+            {todosjsx}
+
+            {/* ===== Input + ADD Button ===== */}
+
             <Box
               sx={{
                 display: "flex",
                 gap: 1,
                 padding: "0 20px 20px",
-                direction:"rtl",
-                
+                direction: "rtl",
               }}
             >
-
               <TextField
                 fullWidth
                 size="small"
                 placeholder="أضف مهمة جديدة..."
                 value={titleInput}
-                onChange={ (e) => {
-                   setTitleInput(e.target.value) 
+                onChange={(e) => {
+                  setTitleInput(e.target.value);
                 }}
-              /> 
-            
+              />
+
               <Button
                 variant="contained"
                 sx={{
@@ -116,16 +141,14 @@ export default function ToDoList() {
                   fontWeight: "bold",
                   padding: "0 20px",
                 }}
-                onClick={ () => {
-                  handleAddClick()
-                }}
+                onClick={handleAddClick}
               >
                 إضافة
               </Button>
             </Box>
 
-        </Card>
-      </Box>
+          </Card>
+        </Box>
       </Container>
     </ThemeProvider>
   );
