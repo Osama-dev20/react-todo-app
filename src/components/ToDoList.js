@@ -33,6 +33,29 @@ export default function ToDoList() {
   const { todos, setTodos } = useContext(TodosContext);
 
   const [titleInput, setTitleInput] = useState("");
+  const [displayTodoType, setdisplayTodoType] = useState("all")
+
+  const completedTodos = todos.filter( (e) =>{
+     return e.isCompleted
+  })
+
+  const notcompletedTodos = todos.filter( (e) =>{
+     return !e.isCompleted
+  })
+
+  let todosToBeRender = todos
+
+  if(displayTodoType == "completed"){
+    todosToBeRender = completedTodos
+  }else if(displayTodoType == "notcompletedTodos"){
+    todosToBeRender = notcompletedTodos
+  }else{
+    todosToBeRender = todos
+  }
+
+  function ChangDispalyTodoType(e){
+    setdisplayTodoType(e.target.value);
+  }
 
   // Get todos from localStorage
   useEffect(() => {
@@ -44,7 +67,7 @@ export default function ToDoList() {
   }, [setTodos]);
 
   // Create JSX for todos
-  const todosjsx = todos.map((t) => {
+  const todosjsx = todosToBeRender.map((t) => {
     return <ToDo key={t.id} todo={t} />;
   });
 
@@ -65,11 +88,7 @@ export default function ToDoList() {
 
     setTodos(updatedTodos);
 
-    localStorage.setItem(
-      "todos",
-      JSON.stringify(updatedTodos)
-    );
-
+    localStorage.setItem("todos", JSON.stringify(updatedTodos));
     setTitleInput("");
   }
 
@@ -103,10 +122,14 @@ export default function ToDoList() {
 
               {/* ===== Filters ===== */}
 
-              <ToggleButtonGroup exclusive>
-                <ToggleButton>غير منجز</ToggleButton>
-                <ToggleButton>منجز</ToggleButton>
-                <ToggleButton>الكل</ToggleButton>
+              <ToggleButtonGroup 
+               exclusive
+               value={displayTodoType}
+               onChange={ChangDispalyTodoType} 
+              >
+                <ToggleButton value="notcompleted">غير منجز</ToggleButton>
+                <ToggleButton value='completed'>منجز</ToggleButton>
+                <ToggleButton value="all">الكل</ToggleButton>
               </ToggleButtonGroup>
             </Box>
 
