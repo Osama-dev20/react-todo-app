@@ -27,6 +27,17 @@ const theme = createTheme({
   typography: {
     fontFamily: "Alexandria"
   },
+  palette: {
+    primary: {
+      main: "#d50000"
+    },
+    secondary: {
+      main: "#304ffe"
+    },
+    success: {
+      main: "#00c853"
+    }
+  }
 });
 
 export default function ToDoList() {
@@ -96,7 +107,11 @@ export default function ToDoList() {
     <ThemeProvider theme={theme}>
       <Container maxWidth="sm">
         <Box sx={{ minWidth: 275 }}>
-          <Card variant="outlined" sx={{ minHeight: 200 }}>
+          <Card 
+           variant="outlined" 
+           style={{maxHeight:"80vh",
+                  overflow:"scroll"}}
+           >
 
             {/* ===== Header ===== */}
 
@@ -122,16 +137,60 @@ export default function ToDoList() {
 
               {/* ===== Filters ===== */}
 
-              <ToggleButtonGroup 
-               exclusive
-               value={displayTodoType}
-               onChange={ChangDispalyTodoType} 
+              <ToggleButtonGroup
+                exclusive
+                value={displayTodoType}
+                onChange={ChangDispalyTodoType}
               >
-                <ToggleButton value="notcompleted">غير منجز</ToggleButton>
-                <ToggleButton value='completed'>منجز</ToggleButton>
-                <ToggleButton value="all">الكل</ToggleButton>
-              </ToggleButtonGroup>
-            </Box>
+                <ToggleButton
+                  value="notcompleted"
+                  sx={{
+                    color: "text.secondary",
+                    "&.Mui-selected": {
+                      color: "#fff",
+                      backgroundColor: "#757575",
+                    },
+                    "&.Mui-selected:hover": {
+                      backgroundColor: "#616161",
+                    },
+                  }}
+                >
+                  غير منجز
+                </ToggleButton>
+              
+                <ToggleButton
+                  value="completed"
+                  sx={{
+                    color: "text.secondary",
+                    "&.Mui-selected": {
+                      color: "#fff",
+                      backgroundColor: "success.main",
+                    },
+                    "&.Mui-selected:hover": {
+                      backgroundColor: "success.dark",
+                    },
+                  }}
+                >
+                  منجز
+                </ToggleButton>
+              
+                <ToggleButton
+                  value="all"
+                  sx={{
+                    color: "text.secondary",
+                    "&.Mui-selected": {
+                      color: "#fff",
+                      backgroundColor: "secondary.main",
+                    },
+                    "&.Mui-selected:hover": {
+                      backgroundColor: "secondary.dark",
+                    },
+                  }}
+                >
+                  الكل
+                </ToggleButton>
+              </ToggleButtonGroup>           
+              </Box>
 
             {/* ===== ALL TODOS ===== */}
 
