@@ -143,7 +143,7 @@ export default function ToDoList() {
                 onChange={ChangDispalyTodoType}
               >
                 <ToggleButton
-                  value="notcompleted"
+                  value="notcompletedTodos"
                   sx={{
                     color: "text.secondary",
                     "&.Mui-selected": {
