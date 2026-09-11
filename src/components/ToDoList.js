@@ -56,9 +56,9 @@ export default function ToDoList() {
 
   let todosToBeRender = todos
 
-  if(displayTodoType == "completed"){
+  if(displayTodoType === "completed"){
     todosToBeRender = completedTodos
-  }else if(displayTodoType == "notcompletedTodos"){
+  }else if(displayTodoType === "notcompletedTodos"){
     todosToBeRender = notcompletedTodos
   }else{
     todosToBeRender = todos
