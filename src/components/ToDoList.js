@@ -57,6 +57,9 @@ export default function ToDoList() {
   // The Todo that the user wants to delete
   const [selectedTodo, setSelectedTodo] = useState(null);
 
+  const [showUpdateDialog, setshowUpdateDialog] = useState(false);
+  const [updateTodo, setUpdateTodo] = useState({ title: "", details: ""});
+
   // ============================
   // Filter Todos
   // ============================
@@ -162,6 +165,53 @@ export default function ToDoList() {
   }
 
   // ============================
+  // Update Todo
+  // ============================  
+  const handleUpdateOpen = (todo) => {
+    setSelectedTodo(todo);    
+    
+    setUpdateTodo({
+      title:todo.title,
+      details: todo.details,
+    })
+    setshowUpdateDialog(true);
+  };
+
+  const handleUpdateClose = () => {
+    setshowUpdateDialog(false);
+    setSelectedTodo(null);
+  };
+
+function handleUpdateConfirm() {
+  if (!selectedTodo) {
+    return;
+  }
+
+  const updatedTodos = todos.map((t) => {
+    if (t.id === selectedTodo.id) {
+      return {
+        ...t,
+        title: updateTodo.title,
+        details: updateTodo.details,
+      };
+    }
+
+    return t;
+  });
+
+  setTodos(updatedTodos);
+
+  localStorage.setItem(
+    "todos",
+    JSON.stringify(updatedTodos)
+  );
+
+  setshowUpdateDialog(false);
+  setSelectedTodo(null);
+}
+
+
+  // ============================
   // Create JSX for Todos
   // ============================
 
@@ -170,7 +220,9 @@ export default function ToDoList() {
       <ToDo
         key={t.id}
         todo={t}
-        ShowDelete={handleDeleteOpen}
+        ShowDelete = {handleDeleteOpen}
+        showUpdate = {handleUpdateOpen} 
+
       />
     );
   });
@@ -181,7 +233,72 @@ export default function ToDoList() {
 
   return (
     <ThemeProvider theme={theme}>
-    
+
+<Dialog
+  open={showUpdateDialog}
+  onClose={handleUpdateClose}
+  aria-labelledby="update-dialog-title"
+  sx={{
+    "& .MuiDialog-paper": {
+      width: "400px",
+      maxWidth: "90%",
+    },
+    direction: "rtl",
+  }}
+>
+  <DialogTitle id="update-dialog-title">
+    تعديل مهمة
+  </DialogTitle>
+
+  <DialogContent>
+    <TextField
+      autoFocus
+      required
+      margin="dense"
+      name="Title"
+      label="عنوان المهمة"
+      type="text"
+      fullWidth
+      variant="standard"
+      value={updateTodo.title}
+      onChange={(e) => {
+        setUpdateTodo({
+          ...updateTodo,
+          title: e.target.value,
+        });
+      }}
+    />
+
+    <TextField
+      required
+      margin="dense"
+      name="Details"
+      label="تفاصيل المهمة"
+      type="text"
+      fullWidth
+      variant="standard"
+      value={updateTodo.details}
+      onChange={(e) => {
+        setUpdateTodo({
+          ...updateTodo,
+          details: e.target.value,
+        });
+      }}
+    />
+  </DialogContent>
+
+  <DialogActions>
+    <Button onClick={handleUpdateClose}>
+      إغلاق
+    </Button>
+
+    <Button onClick={handleUpdateConfirm}>
+      تأكيد التعديل
+    </Button>
+  </DialogActions>
+</Dialog>
+
+
       {/* ================= Delete Dialog ================= */}
 
       <Dialog
