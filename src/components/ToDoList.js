@@ -9,9 +9,14 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
 // Hooks
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useMemo } from "react";
 
 // Create a UUID
 import { v4 as uuidv4 } from "uuid";
@@ -25,50 +30,67 @@ import "../App.css";
 
 const theme = createTheme({
   typography: {
-    fontFamily: "Alexandria"
+    fontFamily: "Alexandria",
   },
   palette: {
     primary: {
-      main: "#d50000"
+      main: "#d50000",
     },
     secondary: {
-      main: "#304ffe"
+      main: "#304ffe",
     },
     success: {
-      main: "#00c853"
-    }
-  }
+      main: "#00c853",
+    },
+  },
 });
 
 export default function ToDoList() {
   const { todos, setTodos } = useContext(TodosContext);
 
   const [titleInput, setTitleInput] = useState("");
-  const [displayTodoType, setdisplayTodoType] = useState("all")
+  const [displayTodoType, setdisplayTodoType] = useState("all");
 
-  const completedTodos = todos.filter( (e) =>{
-     return e.isCompleted
-  })
+  // Delete Dialog State
+  const [showDeleteDialog, setshowDeleteDialog] = useState(false);
 
-  const notcompletedTodos = todos.filter( (e) =>{
-     return !e.isCompleted
-  })
+  // The Todo that the user wants to delete
+  const [selectedTodo, setSelectedTodo] = useState(null);
 
-  let todosToBeRender = todos
+  // ============================
+  // Filter Todos
+  // ============================
 
-  if(displayTodoType === "completed"){
-    todosToBeRender = completedTodos
-  }else if(displayTodoType === "notcompletedTodos"){
-    todosToBeRender = notcompletedTodos
-  }else{
-    todosToBeRender = todos
+  const completedTodos = useMemo(() => {
+    return todos.filter((e) => {
+      return e.isCompleted;
+    });
+  }, [todos]);
+
+  const notcompletedTodos = useMemo(() => {
+    return todos.filter((e) => {
+      return !e.isCompleted;
+    });
+  }, [todos]);
+
+  let todosToBeRender = todos;
+
+  if (displayTodoType === "completed") {
+    todosToBeRender = completedTodos;
+  } else if (displayTodoType === "notcompletedTodos") {
+    todosToBeRender = notcompletedTodos;
+  } else {
+    todosToBeRender = todos;
   }
 
-  function ChangDispalyTodoType(e){
+  function ChangDispalyTodoType(e) {
     setdisplayTodoType(e.target.value);
   }
 
-  // Get todos from localStorage
+  // ============================
+  // Get Todos from localStorage
+  // ============================
+
   useEffect(() => {
     const storageTodos = JSON.parse(localStorage.getItem("todos"));
 
@@ -77,12 +99,10 @@ export default function ToDoList() {
     }
   }, [setTodos]);
 
-  // Create JSX for todos
-  const todosjsx = todosToBeRender.map((t) => {
-    return <ToDo key={t.id} todo={t} />;
-  });
-
+  // ============================
   // Add Todo
+  // ============================
+
   function handleAddClick() {
     if (titleInput.trim() === "") {
       return;
@@ -92,7 +112,7 @@ export default function ToDoList() {
       id: uuidv4(),
       title: titleInput,
       details: "",
-      isCompleted: false
+      isCompleted: false,
     };
 
     const updatedTodos = [...todos, newTodo];
@@ -100,19 +120,115 @@ export default function ToDoList() {
     setTodos(updatedTodos);
 
     localStorage.setItem("todos", JSON.stringify(updatedTodos));
+
     setTitleInput("");
   }
 
+  // ============================
+  // Delete Todo
+  // ============================
+
+  // Open Delete Dialog
+  const handleDeleteOpen = (todo) => {
+    setSelectedTodo(todo);
+    setshowDeleteDialog(true);
+  };
+
+  // Close Delete Dialog
+  const handleDeleteClose = () => {
+    setshowDeleteDialog(false);
+    setSelectedTodo(null);
+  };
+
+  // Confirm Delete
+  function handleDeleteConfirm() {
+    if (!selectedTodo) {
+      return;
+    }
+
+    const deleteTodos = todos.filter((t) => {
+      return t.id !== selectedTodo.id;
+    });
+
+    setTodos(deleteTodos);
+
+    localStorage.setItem(
+      "todos",
+      JSON.stringify(deleteTodos)
+    );
+
+    setshowDeleteDialog(false);
+    setSelectedTodo(null);
+  }
+
+  // ============================
+  // Create JSX for Todos
+  // ============================
+
+  const todosjsx = todosToBeRender.map((t) => {
+    return (
+      <ToDo
+        key={t.id}
+        todo={t}
+        ShowDelete={handleDeleteOpen}
+      />
+    );
+  });
+
+  // ============================
+  // JSX
+  // ============================
+
   return (
     <ThemeProvider theme={theme}>
+    
+      {/* ================= Delete Dialog ================= */}
+
+      <Dialog
+        open={showDeleteDialog}
+        onClose={handleDeleteClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        role="alertdialog"
+        style={{
+          direction: "rtl",
+        }}
+      >
+        <DialogTitle id="alert-dialog-title">
+          هل انت متأكد من حذف هذه المهمة؟
+        </DialogTitle>
+
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            لا يمكنك التراجع عن الحذف بعد اتمامه
+          </DialogContentText>
+        </DialogContent>
+
+        <DialogActions>
+          <Button
+            onClick={handleDeleteClose}
+            autoFocus
+          >
+            اغلاق
+          </Button>
+
+          <Button onClick={handleDeleteConfirm}>
+            تأكيد الحذف
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* ================= Todo List ================= */}
+
       <Container maxWidth="sm">
         <Box sx={{ minWidth: 275 }}>
-          <Card 
-           variant="outlined" 
-           style={{maxHeight:"80vh",
-                  overflow:"scroll"}}
-           >
-
+          <Card
+            variant="outlined"
+            style={{
+              maxHeight: "80vh",
+              overflow: "scroll",
+            }}
+          >
             {/* ===== Header ===== */}
 
             <Box
@@ -127,7 +243,7 @@ export default function ToDoList() {
                 variant="h3"
                 style={{
                   fontWeight: "bold",
-                  transform: "translateY(10px)"
+                  transform: "translateY(10px)",
                 }}
               >
                 مهامي
@@ -157,7 +273,7 @@ export default function ToDoList() {
                 >
                   غير منجز
                 </ToggleButton>
-              
+
                 <ToggleButton
                   value="completed"
                   sx={{
@@ -173,7 +289,7 @@ export default function ToDoList() {
                 >
                   منجز
                 </ToggleButton>
-              
+
                 <ToggleButton
                   value="all"
                   sx={{
@@ -189,8 +305,8 @@ export default function ToDoList() {
                 >
                   الكل
                 </ToggleButton>
-              </ToggleButtonGroup>           
-              </Box>
+              </ToggleButtonGroup>
+            </Box>
 
             {/* ===== ALL TODOS ===== */}
 
@@ -228,7 +344,6 @@ export default function ToDoList() {
                 إضافة
               </Button>
             </Box>
-
           </Card>
         </Box>
       </Container>
