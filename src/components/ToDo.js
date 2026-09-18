@@ -14,12 +14,14 @@ import { useContext, useState } from "react";
 
 // Context
 import TodosContext from "../Context/todosContext";
+import ToastContext  from "../Context/ToastContext";
 
 // CSS
 import "./ToDo.css";
 
 export default function ToDo({ todo, ShowDelete, showUpdate}) {
   const { todos, setTodos } = useContext(TodosContext);
+  const {showHideToast} = useContext(ToastContext);
 
   // ============================
   // Update Todo

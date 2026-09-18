@@ -24,6 +24,7 @@ import { v4 as uuidv4 } from "uuid";
 // Components
 import ToDo from "./ToDo";
 import TodosContext from "../Context/todosContext";
+import ToastContext  from "../Context/ToastContext";
 
 // Styles
 import "../App.css";
@@ -47,6 +48,7 @@ const theme = createTheme({
 
 export default function ToDoList() {
   const { todos, setTodos } = useContext(TodosContext);
+  const {showHideToast} = useContext(ToastContext);
 
   const [titleInput, setTitleInput] = useState("");
   const [displayTodoType, setdisplayTodoType] = useState("all");
@@ -125,6 +127,7 @@ export default function ToDoList() {
     localStorage.setItem("todos", JSON.stringify(updatedTodos));
 
     setTitleInput("");
+    showHideToast("Added successfully!")
   }
 
   // ============================
@@ -162,6 +165,7 @@ export default function ToDoList() {
 
     setshowDeleteDialog(false);
     setSelectedTodo(null);
+    showHideToast("Deleted successfully!");
   }
 
   // ============================
@@ -208,6 +212,7 @@ function handleUpdateConfirm() {
 
   setshowUpdateDialog(false);
   setSelectedTodo(null);
+  showHideToast("Updated successfully!");
 }
 
 
