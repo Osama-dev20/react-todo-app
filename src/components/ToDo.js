@@ -2,7 +2,7 @@
 import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-import Button from "@mui/material/Button";
+
 
 // Icons
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
@@ -10,7 +10,7 @@ import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 
 // Hooks
-import { useContext, useState } from "react";
+import { useContext } from "react";
 
 // Context
 import TodosContext from "../Context/todosContext";
@@ -21,7 +21,6 @@ import "./ToDo.css";
 
 export default function ToDo({ todo, ShowDelete, showUpdate}) {
   const { todos, setTodos } = useContext(TodosContext);
-  const {showHideToast} = useContext(ToastContext);
 
   // ============================
   // Update Todo

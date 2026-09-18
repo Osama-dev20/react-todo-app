@@ -11,7 +11,6 @@ import TodosContext from "./Context/todosContext";
 
 // Create a UUID
 import { v4 as uuidv4 } from 'uuid';
-import { ThemeProvider } from '@emotion/react';
 
 const initialToDos = [
   {
