@@ -14,7 +14,6 @@ import { useContext } from "react";
 
 // Context
 import TodosContext from "../Context/todosContext";
-import ToastContext  from "../Context/ToastContext";
 
 // CSS
 import "./ToDo.css";
