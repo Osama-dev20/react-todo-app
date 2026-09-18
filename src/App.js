@@ -48,6 +48,11 @@ function App() {
    },2000) 
   }
 
+
+  function handleCloseToast() {
+   setOpen(false);
+  }
+
   return (
   <ToastContext.Provider value={{showHideToast}}>  
       <div
@@ -60,7 +65,7 @@ function App() {
           height: "100vh",
         }}
       >
-        <MySnackBar open={open} message={message} />
+        <MySnackBar open={open} message={message} onClose={handleCloseToast} />
         <TodosContext.Provider value={{ todos, setTodos }}>
           <ToDoList />
         </TodosContext.Provider>
