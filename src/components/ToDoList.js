@@ -16,7 +16,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
 // Hooks
-import { useState, useContext, useEffect, useMemo } from "react";
+import { useState, useContext, useEffect, useMemo, useReducer } from "react";
 
 // Create a UUID
 import { v4 as uuidv4 } from "uuid";
@@ -25,6 +25,7 @@ import { v4 as uuidv4 } from "uuid";
 import ToDo from "./ToDo";
 import TodosContext from "../Context/todosContext";
 import ToastContext  from "../Context/ToastContext";
+import ToDosReducers from "../Reducers/ToDosReducer"
 
 // Styles
 import "../App.css";
@@ -47,7 +48,10 @@ const theme = createTheme({
 });
 
 export default function ToDoList() {
-  const { todos, setTodos } = useContext(TodosContext);
+  const { todos2, setTodos } = useContext(TodosContext);
+
+  const [todos, dispatch] = useReducer(ToDosReducers, [])
+
   const {showHideToast} = useContext(ToastContext);
 
   const [titleInput, setTitleInput] = useState("");
@@ -113,19 +117,7 @@ export default function ToDoList() {
       return;
     }
 
-    const newTodo = {
-      id: uuidv4(),
-      title: titleInput,
-      details: "",
-      isCompleted: false,
-    };
-
-    const updatedTodos = [...todos, newTodo];
-
-    setTodos(updatedTodos);
-
-    localStorage.setItem("todos", JSON.stringify(updatedTodos));
-
+    dispatch({type:"added" , payload: {newTitle: titleInput}})
     setTitleInput("");
     showHideToast("Added successfully!")
   }
@@ -148,21 +140,12 @@ export default function ToDoList() {
 
   // Confirm Delete
   function handleDeleteConfirm() {
+    
     if (!selectedTodo) {
       return;
     }
 
-    const deleteTodos = todos.filter((t) => {
-      return t.id !== selectedTodo.id;
-    });
-
-    setTodos(deleteTodos);
-
-    localStorage.setItem(
-      "todos",
-      JSON.stringify(deleteTodos)
-    );
-
+    dispatch({type:"deleted" , payload: { id: selectedTodo.id }})
     setshowDeleteDialog(false);
     setSelectedTodo(null);
     showHideToast("Deleted successfully!");
@@ -191,25 +174,14 @@ function handleUpdateConfirm() {
     return;
   }
 
-  const updatedTodos = todos.map((t) => {
-    if (t.id === selectedTodo.id) {
-      return {
-        ...t,
-        title: updateTodo.title,
-        details: updateTodo.details,
-      };
-    }
-
-    return t;
-  });
-
-  setTodos(updatedTodos);
-
-  localStorage.setItem(
-    "todos",
-    JSON.stringify(updatedTodos)
-  );
-
+dispatch({
+  type: "update",
+  payload: {
+    id: selectedTodo.id,
+    title: updateTodo.title,
+    details: updateTodo.details,
+  }
+});
   setshowUpdateDialog(false);
   setSelectedTodo(null);
   showHideToast("Updated successfully!");
