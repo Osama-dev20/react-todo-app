@@ -48,7 +48,6 @@ const theme = createTheme({
 });
 
 export default function ToDoList() {
-  const { todos2, setTodos } = useContext(TodosContext);
 
   const [todos, dispatch] = useReducer(ToDosReducers, [])
 
@@ -101,12 +100,8 @@ export default function ToDoList() {
   // ============================
 
   useEffect(() => {
-    const storageTodos = JSON.parse(localStorage.getItem("todos"));
-  
-    if (storageTodos) {
-      setTodos(storageTodos);
-    }
-  }, [setTodos]);
+    dispatch({type:"get"})
+  }, []);
 
   // ============================
   // Add Todo

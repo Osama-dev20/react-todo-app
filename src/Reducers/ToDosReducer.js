@@ -53,6 +53,12 @@ export default function reducer(currentTodos, action){
 
   }
 
+  case "get":{
+
+    const storageTodos = JSON.parse(localStorage.getItem("todos")) ?? [];
+     return storageTodos
+  }
+
       default: {
         throw Error("Unknown Erorr" + action.type) 
     
