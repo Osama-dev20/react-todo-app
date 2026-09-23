@@ -101,7 +101,3 @@ src/
 Computer Science Student
 
 [GitHub](https://github.com/Osama-dev20)
-
-## License
-
-This project is licensed under the [MIT License](LICENSE).
