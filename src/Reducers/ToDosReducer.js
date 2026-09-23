@@ -58,7 +58,7 @@ export default function reducer(currentTodos, action){
     const storageTodos = JSON.parse(localStorage.getItem("todos")) ?? [];
      return storageTodos
   }
-  
+
   case "checked": {
   const updatedTodos = currentTodos.map((t) => {
     if (t.id === action.payload.id) {
@@ -76,6 +76,4 @@ export default function reducer(currentTodos, action){
     
   }
    }
-
-  return []
 }
