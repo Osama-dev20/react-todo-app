@@ -3,30 +3,21 @@ import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 
-
 // Icons
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import CheckOutlinedIcon from "@mui/icons-material/CheckOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 
-// Hooks
-import { useContext } from "react";
-
-// Context
-import TodosContext from "../Context/todosContext";
-
 // CSS
 import "./ToDo.css";
 
-export default function ToDo({ todo, ShowDelete, showUpdate}) {
-  const { todos, setTodos } = useContext(TodosContext);
-
+export default function ToDo({ todo, ShowDelete, showUpdate, dispatch }) {
   // ============================
   // Update Todo
   // ============================
 
   const handleUpdateOpen = () => {
-     showUpdate(todo)
+    showUpdate(todo);
   };
 
   // ============================
@@ -42,23 +33,7 @@ export default function ToDo({ todo, ShowDelete, showUpdate}) {
   // ============================
 
   function handCheckClick() {
-    const updateTodos = todos.map((t) => {
-      if (t.id === todo.id) {
-        return {
-          ...t,
-          isCompleted: !t.isCompleted,
-        };
-      } else {
-        return t;
-      }
-    });
-
-    setTodos(updateTodos);
-
-    localStorage.setItem(
-      "todos",
-      JSON.stringify(updateTodos)
-    );
+    dispatch({ type: "checked", payload: { id: todo.id } });
   }
 
   // ============================
@@ -85,17 +60,11 @@ export default function ToDo({ todo, ShowDelete, showUpdate}) {
         }}
       >
         <div className="Title">
-          <Typography
-            variant="h5"
-            gutterBottom
-          >
+          <Typography variant="h5" gutterBottom>
             {todo.title}
           </Typography>
 
-          <Typography
-            component="div"
-            sx={{ fontSize: 17 }}
-          >
+          <Typography component="div" sx={{ fontSize: 17 }}>
             {todo.details}
           </Typography>
         </div>
@@ -114,14 +83,8 @@ export default function ToDo({ todo, ShowDelete, showUpdate}) {
             aria-label="check"
             size="large"
             sx={{
-              color: todo.isCompleted
-                ? "#fff"
-                : "#4CAF50",
-
-              background: todo.isCompleted
-                ? "#4CAF50"
-                : "#fff",
-
+              color: todo.isCompleted ? "#fff" : "#4CAF50",
+              background: todo.isCompleted ? "#4CAF50" : "#fff",
               border: "1px solid #4CAF50",
 
               "&:hover": {
