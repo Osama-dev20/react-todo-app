@@ -2,9 +2,9 @@
 
 A simple, responsive To-Do List application built with **React** and **Material UI**, featuring full CRUD functionality and persistent storage via LocalStorage.
 
-![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
-![MUI](https://img.shields.io/badge/MUI-v9-007FFF?logo=mui&logoColor=white)
-![Deployed on Vercel](https://img.shields.io/badge/Deployed-Vercel-black?logo=vercel)
+[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)](https://react.dev/)
+[![MUI](https://img.shields.io/badge/MUI-v9-007FFF?logo=mui&logoColor=white)](https://mui.com/)
+[![Deployed on Vercel](https://img.shields.io/badge/Deployed-Vercel-black?logo=vercel)](https://vercel.com/)
 
 ## Live Demo
 
